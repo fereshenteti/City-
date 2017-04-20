@@ -32,6 +32,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.feres.cityplus.Home" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_alignParentBottom="true"
@@ -43,6 +49,7 @@
         android:layout_marginLeft="@dimen/bottom_layout_margin"
         android:layout_marginRight="@dimen/bottom_layout_margin"
         app:behavior_peekHeight="50dp"
+        android:alpha="0.8"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <LinearLayout
@@ -52,16 +59,7 @@
             android:id="@+id/bottom_layout"
             android:background="@color/colorPrimary"
             >
-        <!--<TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimary"
-            android:text="Sections"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:gravity="center"
-            />-->
-
+        
         <android.support.v4.view.ViewPager
             android:id="@+id/container"
             android:layout_width="match_parent"
