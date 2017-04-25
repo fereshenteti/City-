@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
@@ -19,25 +20,32 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.example.feres.cityplus.Adapters.SectionsPagerAdapter;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class Home extends AppCompatActivity implements OnMapReadyCallback {
+public class Home extends AppCompatActivity implements OnMapReadyCallback, View.OnClickListener {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private GoogleMap mMap;
     private GpsTracker gpsTracker;
     private Location mlocation;
-    double latitude;
-    double longitude;
+    private double latitude;
+    private double longitude;
     private ViewPager mViewPager;
+    private LinearLayout cover_layout;
+    private AppBarLayout appbar;
+    private com.getbase.floatingactionbutton.FloatingActionsMenu fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +79,27 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        com.getbase.floatingactionbutton.FloatingActionsMenu fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) findViewById(R.id.fab);
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        cover_layout = (LinearLayout) findViewById(R.id.cover_layout);
+        cover_layout.setOnClickListener(this);
+
+        fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) findViewById(R.id.fab);
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onMenuExpanded() {
+                if(cover_layout.getVisibility() == View.GONE) {
+                    cover_layout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                if(cover_layout.getVisibility() == View.VISIBLE) {
+                    cover_layout.setVisibility(View.GONE);
+                }
             }
         });
-      */
+
 
         CoordinatorLayout main_content = (CoordinatorLayout) findViewById(R.id.main_content);
         View bottomSheet = main_content.findViewById(R.id.bottom_sheet);
@@ -139,14 +158,16 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         LatLng myPosition = new LatLng(latitude,longitude);
-        mMap.addMarker(new MarkerOptions().position(myPosition).title("je suis  là.."+latitude ));
+        mMap.addMarker(new MarkerOptions()
+                .position(myPosition)
+                .title("je suis là :p")
+                .snippet(myPosition.latitude+" - "+myPosition.longitude)
+                .icon(BitmapDescriptorFactory.defaultMarker(10.0f)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(6));
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -160,4 +181,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.cover_layout){
+            if(fab.isExpanded()){
+                fab.collapse();
+            }
+        }
+    }
 }
